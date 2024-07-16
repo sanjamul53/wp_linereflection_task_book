@@ -12,8 +12,7 @@ class Init
     private string $gallery_mata = 'bk5_book_gallery';
     public string $cpt_tax = 'book_category';
 
-    private function __construct()
-    {
+    private function __construct() {
 
         $this->define_ajax();
 
@@ -27,6 +26,10 @@ class Init
         add_action('init', [$this, 'register_taxonomy'], 1);
 
         add_action('wp_enqueue_scripts', [$this, 'user_loadScripts']);
+
+        add_action('admin_enqueue_scripts', [$this, 'admin_loadScripts']);
+
+        new Shortcode();
     }
 
 
@@ -60,8 +63,7 @@ class Init
     }
 
     // ================== handle script files ==================
-    public function user_loadScripts()
-    {
+    public function user_loadScripts() {
 
         if (is_page('books')) {
 
@@ -85,6 +87,18 @@ class Init
                 Bk5_ROOTURL . 'assets/books_page.css',
             );
         }
+    }
+
+
+    public function admin_loadScripts($hook){
+
+        if ($hook != 'post.php') {
+            return null;
+        }
+
+        wp_enqueue_media();
+
+        // wp_enqueue_script('bk5-book-gallery-script', get_template_directory_uri() . '/js/book-gallery.js', array(), null, true);
     }
 
     // ==================== create book post type ====================
@@ -134,20 +148,13 @@ class Init
         );
     }
 
-    // public function meta_box_ui($post) {
-
-    //     $book_gallery = get_post_meta( $post->ID, 'book_gallery', true );
-
-    //     require_once(BK5_ROOTPATH."templates/book_cpt_gallery.php");
-    // }
-
     public function meta_box_ui($post) {
 
         wp_nonce_field('bk5_metabox', 'bk5_metabox_nonce');
 
         $gallery_list = get_post_meta($post->ID, $this->gallery_mata, true);
 
-        require_once(BK5_ROOTPATH . "templates/book_cpt_gallery_metabox.php");
+        require_once(BK5_ROOTPATH . "views/book_cpt_gallery_metabox.php");
     }
 
     // Save book gallery meta box data

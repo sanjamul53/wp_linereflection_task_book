@@ -16,6 +16,10 @@ define('Bk5_ROOTURL', plugin_dir_url(__FILE__));
 // traits
 require_once(BK5_ROOTPATH."includes/traits/singleton.php");
 
+// shortcode
+require_once(BK5_ROOTPATH."includes/shortcode.php");
+
+
 // inc
 require_once(BK5_ROOTPATH."includes/init.php");
 
